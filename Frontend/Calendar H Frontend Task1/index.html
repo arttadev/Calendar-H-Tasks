@@ -13,7 +13,7 @@
   <body>
     <div class="wrapper">
       <div class="inner">
-        <form action="login.html">
+        <form action="/api/auth/login.html" id="registrationForm">
           <h3>Registration Form</h3>
           <div class="form-group">
             <input type="text" placeholder="First Name" class="form-control" />
@@ -62,5 +62,46 @@
         </form>
       </div>
     </div>
+    <script>
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = {
+            firstName: this.querySelector('input[placeholder="First Name"]')
+              .value,
+            lastName: this.querySelector('input[placeholder="Last Name"]')
+              .value,
+            username: this.querySelector('input[placeholder="Username"]').value,
+            email: this.querySelector('input[placeholder="Email Address"]')
+              .value,
+            gender: this.querySelector("select").value,
+            password: this.querySelector('input[placeholder="Password"]').value,
+            confirmPassword: this.querySelector(
+              'input[placeholder="Confirm Password"]'
+            ).value,
+          };
+          fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Response not OK");
+              }
+              response.json();
+            })
+            .then((data) => {
+              window.location.href = "./login.html";
+              console.log("Success:", data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+    </script>
   </body>
 </html>
